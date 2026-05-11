@@ -1,0 +1,795 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>APP TÍNH GIÁ IN ẤN</title>
+
+<style>
+
+body{
+    font-family:Arial,sans-serif;
+    background:#f3f4f6;
+    padding:20px;
+}
+
+.container{
+    max-width:1100px;
+    margin:auto;
+    background:white;
+    padding:25px;
+    border-radius:15px;
+    box-shadow:0 0 10px rgba(0,0,0,0.1);
+}
+
+h1{
+    text-align:center;
+    margin-bottom:25px;
+}
+
+.tabs{
+    display:flex;
+    gap:10px;
+    margin-bottom:20px;
+    flex-wrap:wrap;
+}
+
+.tabs button{
+    flex:1;
+    padding:12px;
+    border:none;
+    border-radius:10px;
+    background:#e5e7eb;
+    cursor:pointer;
+    font-weight:bold;
+}
+
+.tabs button.active{
+    background:black;
+    color:white;
+}
+
+.tab-content{
+    display:none;
+}
+
+.tab-content.active{
+    display:block;
+}
+
+.grid{
+    display:grid;
+    grid-template-columns:repeat(2,1fr);
+    gap:15px;
+}
+
+label{
+    display:block;
+    margin-bottom:5px;
+    font-weight:bold;
+}
+
+input,select{
+    width:100%;
+    padding:10px;
+    border-radius:8px;
+    border:1px solid #ccc;
+    box-sizing:border-box;
+}
+
+.calc-btn{
+    width:100%;
+    margin-top:25px;
+    padding:15px;
+    border:none;
+    background:black;
+    color:white;
+    font-size:18px;
+    border-radius:10px;
+    cursor:pointer;
+}
+
+.result{
+    margin-top:25px;
+    background:#f9fafb;
+    padding:20px;
+    border-radius:10px;
+    line-height:1.8;
+    font-size:17px;
+}
+
+.total{
+    color:red;
+    font-size:30px;
+    font-weight:bold;
+}
+
+@media(max-width:768px){
+
+    .grid{
+        grid-template-columns:1fr;
+    }
+
+}
+
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+<h1>APP TÍNH GIÁ IN ẤN</h1>
+
+<div class="tabs">
+
+    <button class="active" onclick="openTab('hopsong',this)">
+        Hộp Sóng Cuộn
+    </button>
+
+    <button onclick="openTab('tuigiay',this)">
+        Túi Giấy
+    </button>
+
+    <button onclick="openTab('hopno',this)">
+        Hộp Nơ
+    </button>
+
+</div>
+
+<!-- =========================
+HỘP SÓNG CUỘN
+========================= -->
+
+<div id="hopsong" class="tab-content active">
+
+<div class="grid">
+
+<div>
+<label>Dài hộp</label>
+<input type="number" id="hs_dai" value="30">
+</div>
+
+<div>
+<label>Rộng hộp</label>
+<input type="number" id="hs_rong" value="20">
+</div>
+
+<div>
+<label>Hông hộp</label>
+<input type="number" id="hs_hong" value="8">
+</div>
+
+<div>
+<label>Số lượng</label>
+<input type="number" id="hs_sl" value="1000">
+</div>
+
+<div>
+<label>Bù hao</label>
+<input type="number" id="hs_buhao" value="100">
+</div>
+
+<div>
+<label>Định lượng giấy</label>
+<input type="number" id="hs_gsm" value="250">
+</div>
+
+<div>
+<label>Giá giấy</label>
+<input type="number" id="hs_giagiay" value="18">
+</div>
+
+<div>
+<label>Chất liệu sóng</label>
+
+<select id="hs_song">
+
+<option value="6300">
+Sóng E trắng - 6300
+</option>
+
+<option value="5300">
+Sóng E nâu - 5300
+</option>
+
+</select>
+
+</div>
+
+<div>
+<label>Cán</label>
+
+<select id="hs_can">
+
+<option value="0.24">
+Cán mờ
+</option>
+
+<option value="0">
+Không cán
+</option>
+
+</select>
+
+</div>
+
+<div>
+<label>Vận chuyển</label>
+<input type="number" id="hs_vc" value="150000">
+</div>
+
+<div>
+<label>Lợi nhuận (%)</label>
+<input type="number" id="hs_ln" value="25">
+</div>
+
+</div>
+
+<button class="calc-btn" onclick="tinhHopSong()">
+TÍNH HỘP SÓNG
+</button>
+
+<div class="result" id="hs_kq"></div>
+
+</div>
+
+<!-- =========================
+TÚI GIẤY
+========================= -->
+
+<div id="tuigiay" class="tab-content">
+
+<div class="grid">
+
+<div>
+<label>Ngang túi</label>
+<input type="number" id="tg_ngang" value="30">
+</div>
+
+<div>
+<label>Cao túi</label>
+<input type="number" id="tg_cao" value="35">
+</div>
+
+<div>
+<label>Hông túi</label>
+<input type="number" id="tg_hong" value="10">
+</div>
+
+<div>
+<label>Số lượng</label>
+<input type="number" id="tg_sl" value="1000">
+</div>
+
+<div>
+<label>Bù hao</label>
+<input type="number" id="tg_buhao" value="100">
+</div>
+
+<div>
+<label>Túi 1 mảnh / 2 mảnh</label>
+
+<select id="tg_manh">
+
+<option value="1">
+1 mảnh
+</option>
+
+<option value="2">
+2 mảnh
+</option>
+
+</select>
+
+</div>
+
+<div>
+<label>Định lượng giấy</label>
+<input type="number" id="tg_gsm" value="250">
+</div>
+
+<div>
+<label>Giá giấy</label>
+<input type="number" id="tg_giagiay" value="18">
+</div>
+
+<div>
+<label>Dán / túi</label>
+<input type="number" id="tg_dan" value="1400">
+</div>
+
+<div>
+<label>Vận chuyển</label>
+<input type="number" id="tg_vc" value="150000">
+</div>
+
+<div>
+<label>Lợi nhuận (%)</label>
+<input type="number" id="tg_ln" value="25">
+</div>
+
+</div>
+
+<button class="calc-btn" onclick="tinhTuiGiay()">
+TÍNH TÚI GIẤY
+</button>
+
+<div class="result" id="tg_kq"></div>
+
+</div>
+
+<!-- =========================
+HỘP NƠ
+========================= -->
+
+<div id="hopno" class="tab-content">
+
+<div class="grid">
+
+<div>
+<label>Ngang hộp</label>
+<input type="number" id="hn_ngang" value="30">
+</div>
+
+<div>
+<label>Dọc hộp</label>
+<input type="number" id="hn_doc" value="20">
+</div>
+
+<div>
+<label>Hông hộp</label>
+<input type="number" id="hn_hong" value="8">
+</div>
+
+<div>
+<label>Số lượng</label>
+<input type="number" id="hn_sl" value="1000">
+</div>
+
+<div>
+<label>Bù hao</label>
+<input type="number" id="hn_buhao" value="100">
+</div>
+
+<div>
+<label>Loại hộp</label>
+
+<select id="hn_loai">
+
+<option value="0">
+Ivory
+</option>
+
+<option value="1">
+Hộp sóng
+</option>
+
+</select>
+
+</div>
+
+<div>
+<label>Định lượng giấy</label>
+<input type="number" id="hn_gsm" value="250">
+</div>
+
+<div>
+<label>Giá giấy</label>
+<input type="number" id="hn_giagiay" value="18">
+</div>
+
+<div>
+<label>Chất liệu sóng</label>
+
+<select id="hn_song">
+
+<option value="0">
+Không sóng
+</option>
+
+<option value="6300">
+Sóng E trắng - 6300
+</option>
+
+<option value="5300">
+Sóng E nâu - 5300
+</option>
+
+</select>
+
+</div>
+
+<div>
+<label>Bù tối ưu</label>
+<input type="number" id="hn_toiuu" value="5">
+</div>
+
+<div>
+<label>Cán</label>
+
+<select id="hn_can">
+
+<option value="0.24">
+Cán mờ
+</option>
+
+<option value="0">
+Không cán
+</option>
+
+</select>
+
+</div>
+
+<div>
+<label>Bế / hộp</label>
+<input type="number" id="hn_be" value="350">
+</div>
+
+<div>
+<label>Vận chuyển</label>
+<input type="number" id="hn_vc" value="150000">
+</div>
+
+<div>
+<label>Lợi nhuận (%)</label>
+<input type="number" id="hn_ln" value="25">
+</div>
+
+</div>
+
+<button class="calc-btn" onclick="tinhHopNo()">
+TÍNH HỘP NƠ
+</button>
+
+<div class="result" id="hn_kq"></div>
+
+</div>
+
+</div>
+
+<script>
+
+function format(number){
+
+    return new Intl.NumberFormat('vi-VN')
+    .format(Math.round(number));
+}
+
+function openTab(tabId,btn){
+
+    document.querySelectorAll('.tab-content')
+    .forEach(tab=>{
+        tab.classList.remove('active');
+    });
+
+    document.querySelectorAll('.tabs button')
+    .forEach(button=>{
+        button.classList.remove('active');
+    });
+
+    document.getElementById(tabId)
+    .classList.add('active');
+
+    btn.classList.add('active');
+}
+
+/* =========================
+KHỔ IN
+========================= */
+
+function tinhKhoIn(A,B){
+
+    let giaIn = 0;
+    let khoIn = "";
+    let giaThem = 120;
+
+    if(A<=65 && B<=86){
+
+        giaIn = 1200000;
+        khoIn = "65x86";
+    }
+
+    else if(A<=72 && B<=102){
+
+        giaIn = 1200000;
+        khoIn = "72x102";
+    }
+
+    else if(A<=79 && B<=109){
+
+        giaIn = 2500000;
+        khoIn = "79x109";
+        giaThem = 250;
+    }
+
+    else{
+
+        giaIn = 650000;
+        khoIn = "43x65";
+    }
+
+    return{
+        giaIn,
+        khoIn,
+        giaThem
+    };
+}
+
+/* =========================
+HỘP SÓNG
+========================= */
+
+function tinhHopSong(){
+
+    let dai = Number(hs_dai.value);
+    let rong = Number(hs_rong.value);
+    let hong = Number(hs_hong.value);
+
+    let sl = Number(hs_sl.value);
+    let buhao = Number(hs_buhao.value);
+
+    let gsm = Number(hs_gsm.value);
+    let giaGiay = Number(hs_giagiay.value);
+
+    let giaSong = Number(hs_song.value);
+
+    let giaCan = Number(hs_can.value);
+
+    let vc = Number(hs_vc.value);
+
+    let ln = Number(hs_ln.value);
+
+    let tongTo = sl + buhao;
+
+    let A = dai+hong+hong+hong+hong+2;
+    let B = rong+rong+hong+hong+hong;
+
+    A += 1;
+    B += 1;
+
+    let mA = A/100;
+    let mB = B/100;
+
+    let G = mA*mB*gsm*giaGiay*tongTo;
+
+    let S = mA*mB*tongTo*giaSong;
+
+    let C = A*B*tongTo*giaCan;
+
+    let inData = tinhKhoIn(A,B);
+
+    let I = inData.giaIn;
+
+    if(tongTo>1000){
+
+        I += (tongTo-1000)*inData.giaThem;
+    }
+
+    let tongSX =
+        G+S+C+I+
+        150000+
+        400000+
+        (350*sl)+
+        (350*sl)+
+        vc;
+
+    let tong = tongSX/(1-(ln/100));
+
+    hs_kq.innerHTML = `
+
+    Khổ giấy: ${A} x ${B} cm<br>
+    Khổ in: ${inData.khoIn}<br><br>
+
+    Tổng giá:
+    <div class="total">
+    ${format(tong)}đ
+    </div>
+
+    Giá / hộp:
+    ${format(tong/sl)}đ
+
+    `;
+}
+
+/* =========================
+TÚI GIẤY
+========================= */
+
+function tinhTuiGiay(){
+
+    let ngang = Number(tg_ngang.value);
+    let cao = Number(tg_cao.value);
+    let hong = Number(tg_hong.value);
+
+    let sl = Number(tg_sl.value);
+    let buhao = Number(tg_buhao.value);
+
+    let manh = Number(tg_manh.value);
+
+    let gsm = Number(tg_gsm.value);
+    let giaGiay = Number(tg_giagiay.value);
+
+    let dan = Number(tg_dan.value);
+
+    let vc = Number(tg_vc.value);
+
+    let ln = Number(tg_ln.value);
+
+    let tongTo = sl + buhao;
+
+    let A = 0;
+    let B = 0;
+
+    if(manh==1){
+
+        A = ngang+hong+ngang+hong+2;
+
+    }else{
+
+        A = ngang+hong+2;
+    }
+
+    B = cao+(hong/2)+2+3;
+
+    A += 2;
+    B += 2;
+
+    let mA = A/100;
+    let mB = B/100;
+
+    let G =
+        mA*mB*gsm*
+        giaGiay*tongTo*manh;
+
+    let inData =
+        tinhKhoIn(A,B);
+
+    let I =
+        inData.giaIn;
+
+    if(tongTo>1000){
+
+        I +=
+        (tongTo-1000)
+        *inData.giaThem;
+    }
+
+    let tongSX =
+        G+
+        I+
+        400000+
+        (dan*sl)+
+        vc;
+
+    let tong =
+        tongSX/
+        (1-(ln/100));
+
+    tg_kq.innerHTML = `
+
+    Khổ giấy:
+    ${A} x ${B} cm<br>
+
+    Khổ in:
+    ${inData.khoIn}<br><br>
+
+    Tổng giá:
+
+    <div class="total">
+    ${format(tong)}đ
+    </div>
+
+    Giá / túi:
+    ${format(tong/sl)}đ
+
+    `;
+}
+
+/* =========================
+HỘP NƠ
+========================= */
+
+function tinhHopNo(){
+
+    let ngang = Number(hn_ngang.value);
+    let doc = Number(hn_doc.value);
+    let hong = Number(hn_hong.value);
+
+    let sl = Number(hn_sl.value);
+    let buhao = Number(hn_buhao.value);
+
+    let gsm = Number(hn_gsm.value);
+    let giaGiay = Number(hn_giagiay.value);
+
+    let giaSong = Number(hn_song.value);
+
+    let toiUu = Number(hn_toiuu.value);
+
+    let giaCan = Number(hn_can.value);
+
+    let be = Number(hn_be.value);
+
+    let vc = Number(hn_vc.value);
+
+    let ln = Number(hn_ln.value);
+
+    let tongTo = sl + buhao;
+
+    let A =
+        ngang+hong+hong+2+2;
+
+    let B =
+        doc+hong+
+        (doc-3)+
+        hong+
+        toiUu;
+
+    let mA = A/100;
+    let mB = B/100;
+
+    let G =
+        mA*mB*
+        gsm*
+        giaGiay*
+        tongTo;
+
+    let S =
+        mA*mB*
+        tongTo*
+        giaSong;
+
+    let C =
+        A*B*
+        tongTo*
+        giaCan;
+
+    let inData =
+        tinhKhoIn(A,B);
+
+    let I =
+        inData.giaIn;
+
+    if(tongTo>1000){
+
+        I +=
+        (tongTo-1000)
+        *inData.giaThem;
+    }
+
+    let tongSX =
+        G+S+C+I+
+        400000+
+        (be*sl)+
+        vc;
+
+    let tong =
+        tongSX/
+        (1-(ln/100));
+
+    hn_kq.innerHTML = `
+
+    Khổ giấy:
+    ${A} x ${B} cm<br>
+
+    Khổ in:
+    ${inData.khoIn}<br><br>
+
+    Tổng giá:
+
+    <div class="total">
+    ${format(tong)}đ
+    </div>
+
+    Giá / hộp:
+    ${format(tong/sl)}đ
+
+    `;
+}
+
+</script>
+
+</body>
+</html>
